@@ -1,0 +1,167 @@
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import { FloatingLabel, Table } from "flowbite-react";
+import { inputTheme, tableTheme } from "../../themes/index";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
+import { Context } from "../../context/Context";
+import { ACTION_TYPES } from "../../store/reducers";
+
+import "./style.scss";
+
+export default function Index() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+
+  const { state, dispatch } = useContext(Context);
+  const { crypts, watchlist } = state;
+
+  const fetchCrypts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=gecko_desc&per_page=10&page=${page}&sparkline=false&price_change_percentage=24h`
+      );
+
+      if (!response.ok) {
+        throw new Error("HTTP error!");
+      }
+      const data = await response.json();
+      dispatch({ type: ACTION_TYPES.SET_CRYPTOS, payload: data });
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, dispatch]);
+
+  useEffect(() => {
+    fetchCrypts();
+  }, [fetchCrypts]);
+
+  useEffect(() => {
+    const savedWatchlist = JSON.parse(
+      localStorage.getItem("watchlist") || "[]"
+    );
+    dispatch({ type: ACTION_TYPES.SET_WATCHLIST, payload: savedWatchlist });
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem("watchlist", JSON.stringify(watchlist));
+  }, [watchlist]);
+
+  const toggleWatchlist = useCallback(
+    (cryptId) => {
+      if (watchlist.includes(cryptId)) {
+        dispatch({
+          type: ACTION_TYPES.REMOVE_FROM_WATCHLIST,
+          payload: cryptId,
+        });
+      } else {
+        dispatch({ type: ACTION_TYPES.ADD_TO_WATCHLIST, payload: cryptId });
+      }
+    },
+    [watchlist, dispatch]
+  );
+
+  const handlePagination = useCallback((_, value) => {
+    setPage(value);
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <section className="container">
+      <h2 className="text-[#FFFFFF] text-[34px] font-[400] text-center py-[20px]">
+        Cryptocurrency Prices by Market Cap
+      </h2>
+
+      <div className="pb-[20px]">
+        <FloatingLabel
+          className="bg-transparent text-[14px] font-[400] text-white"
+          theme={inputTheme}
+          variant="outlined"
+          label="Search For a Crypto Currency.."
+          sizing="sm"
+        />
+      </div>
+
+      <div className="pb-[40px]">
+        <div className="overflow-x-auto">
+          <Table hoverable theme={tableTheme}>
+            <Table.Head>
+              <Table.HeadCell>Coin</Table.HeadCell>
+              <Table.HeadCell>Price</Table.HeadCell>
+              <Table.HeadCell>24h Change</Table.HeadCell>
+              <Table.HeadCell>Market Cap</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {crypts.map((crypt) => (
+                <Table.Row key={crypt.id}>
+                  <Table.Cell className="whitespace-nowrap font-medium white">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={crypt.image}
+                        alt={crypt.name}
+                        className="w-[50px] rounded-full h-[50px] object-contain"
+                      />
+                      <div className="flex flex-col gap-1">
+                        <p className="uppercase text-[24px] font-[400]">
+                          {crypt.symbol}
+                        </p>
+                        <p className="font-[400] text-[14px] text-[#A9A9A9]">
+                          {crypt.name}
+                        </p>
+                      </div>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    ₹ {crypt.current_price.toLocaleString("en-IN")}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex gap-3">
+                      <button onClick={() => toggleWatchlist(crypt.id)}>
+                        <RemoveRedEyeRoundedIcon
+                          style={{
+                            color: watchlist.includes(crypt.id)
+                              ? "#0ECB81"
+                              : "inherit",
+                          }}
+                        />
+                      </button>
+                      <span
+                        className={
+                          crypt.price_change_percentage_24h > 0
+                            ? "text-[#0ECB81] text-[14px] font-[500]"
+                            : "text-[#FF0000] text-[14px] font-[500]"
+                        }
+                      >
+                        {crypt.price_change_percentage_24h.toFixed(2)}%
+                      </span>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <p>₹ {crypt.market_cap.toLocaleString("en-IN")}</p>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          <Stack
+            className="flex py-5 items-center text-gray-200 justify-center"
+            spacing={2}
+          >
+            <Pagination
+              onChange={handlePagination}
+              page={page}
+              count={10}
+              color="primary"
+            />
+          </Stack>
+        </div>
+      </div>
+    </section>
+  );
+}
