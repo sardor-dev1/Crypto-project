@@ -8,7 +8,6 @@ export default function WatchlistDrawer({ isOpen, handleClose }) {
   const { crypts, watchlist } = state;
 
   useEffect(() => {
-    // LocalStorage'dan watchlist ma'lumotlarini olish
     const savedWatchlist = JSON.parse(
       localStorage.getItem("watchlist") || "[]"
     );
@@ -18,7 +17,6 @@ export default function WatchlistDrawer({ isOpen, handleClose }) {
   }, []);
 
   useEffect(() => {
-    // Watchlist o'zgarganda LocalStorage'ga saqlash
     localStorage.setItem("watchlist", JSON.stringify(watchlist));
   }, [watchlist]);
 
