@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Navbar, Dropdown } from "flowbite-react";
 import Drawer from "../drawer";
+import HeaderSkeleton from "../../components/skeletons/header-skeleton";
 import "./style.scss";
 
 const customTheme = {
@@ -9,9 +10,23 @@ const customTheme = {
   },
 };
 
-const index = () => {
+const index = ({ setValue }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000);
+  }, []);
+
   const handleClose = () => setIsOpen(false);
+
+  const handleSelect = (selectedValue) => {
+    setValue(selectedValue);
+  };
+
+  if (loading) {
+    return <HeaderSkeleton />; // Render the skeleton loader when loading
+  }
 
   return (
     <>
@@ -26,21 +41,27 @@ const index = () => {
             </Navbar.Brand>
             <div className="flex gap-12 md:order-2">
               <Dropdown
-                className="bg-[#15171B] border-none shadow-sm shadow-gray-500 text-white"
                 label="USD"
                 inline
+                className="bg-[#15171B] border-none shadow-sm shadow-gray-500 text-white"
               >
-                <Dropdown.Item className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl">
-                  Dashboard
+                <Dropdown.Item
+                  className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
+                  onClick={() => handleSelect("USD")}
+                >
+                  USD
                 </Dropdown.Item>
-                <Dropdown.Item className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl">
-                  Settings
+                <Dropdown.Item
+                  className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
+                  onClick={() => handleSelect("EUR")}
+                >
+                  EUR
                 </Dropdown.Item>
-                <Dropdown.Item className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl">
-                  Earnings
-                </Dropdown.Item>
-                <Dropdown.Item className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl">
-                  Sign out
+                <Dropdown.Item
+                  className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
+                  onClick={() => handleSelect("RUB")}
+                >
+                  RUB
                 </Dropdown.Item>
               </Dropdown>
               <Button

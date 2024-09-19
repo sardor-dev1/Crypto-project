@@ -6,13 +6,18 @@ import Stack from "@mui/material/Stack";
 import RemoveRedEyeRoundedIcon from "@mui/icons-material/RemoveRedEyeRounded";
 import { Context } from "../../context/Context";
 import { ACTION_TYPES } from "../../store/reducers";
-
+import { useNavigate } from "react-router-dom";
+import SkeletonLoader from "../skeletons/skeleton";
+import MarkapSkeleton from "../skeletons/markap-skeleton";
+import PaginationSkeleton from "../skeletons/pagination";
 import "./style.scss";
 
-export default function Index() {
+export default function Index({ value }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const { state, dispatch } = useContext(Context);
   const { crypts, watchlist } = state;
@@ -28,10 +33,13 @@ export default function Index() {
         throw new Error("HTTP error!");
       }
       const data = await response.json();
-      dispatch({ type: ACTION_TYPES.SET_CRYPTOS, payload: data });
+
+      setTimeout(() => {
+        dispatch({ type: ACTION_TYPES.SET_CRYPTOS, payload: data });
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       setError(error.message);
-    } finally {
       setLoading(false);
     }
   }, [page, dispatch]);
@@ -65,101 +73,127 @@ export default function Index() {
     [watchlist, dispatch]
   );
 
+  const handleSearch = useCallback((e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  }, []);
+
   const handlePagination = useCallback((_, value) => {
     setPage(value);
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  const filteredCrypts = crypts.filter(
+    (crypt) =>
+      crypt.name.toLowerCase().includes(searchTerm) ||
+      crypt.symbol.toLowerCase().includes(searchTerm)
+  );
+
   if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="container">
-      <h2 className="text-[#FFFFFF] text-[34px] font-[400] text-center py-[20px]">
-        Cryptocurrency Prices by Market Cap
-      </h2>
-
-      <div className="pb-[20px]">
-        <FloatingLabel
-          className="bg-transparent text-[14px] font-[400] text-white"
-          theme={inputTheme}
-          variant="outlined"
-          label="Search For a Crypto Currency.."
-          sizing="sm"
-        />
-      </div>
+      {loading ? (
+        <MarkapSkeleton />
+      ) : (
+        <div>
+          <h2 className="text-[#FFFFFF] text-[34px] font-[400] text-center py-[20px]">
+            Cryptocurrency Prices by Market Cap
+          </h2>
+          <div className="pb-[20px]">
+            <FloatingLabel
+              onChange={handleSearch}
+              className="bg-transparent text-[14px] font-[400] text-white"
+              theme={inputTheme}
+              variant="outlined"
+              label="Search For a Crypto Currency.."
+              sizing="sm"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="pb-[40px]">
         <div className="overflow-x-auto">
-          <Table hoverable theme={tableTheme}>
-            <Table.Head>
-              <Table.HeadCell>Coin</Table.HeadCell>
-              <Table.HeadCell>Price</Table.HeadCell>
-              <Table.HeadCell>24h Change</Table.HeadCell>
-              <Table.HeadCell>Market Cap</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="divide-y">
-              {crypts.map((crypt) => (
-                <Table.Row key={crypt.id}>
-                  <Table.Cell className="whitespace-nowrap font-medium white">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={crypt.image}
-                        alt={crypt.name}
-                        className="w-[50px] rounded-full h-[50px] object-contain"
-                      />
-                      <div className="flex flex-col gap-1">
-                        <p className="uppercase text-[24px] font-[400]">
-                          {crypt.symbol}
-                        </p>
-                        <p className="font-[400] text-[14px] text-[#A9A9A9]">
-                          {crypt.name}
-                        </p>
-                      </div>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    ₹ {crypt.current_price.toLocaleString("en-IN")}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex gap-3">
-                      <button onClick={() => toggleWatchlist(crypt.id)}>
-                        <RemoveRedEyeRoundedIcon
-                          style={{
-                            color: watchlist.includes(crypt.id)
-                              ? "#0ECB81"
-                              : "inherit",
-                          }}
+          {loading ? (
+            <SkeletonLoader />
+          ) : (
+            <Table hoverable theme={tableTheme}>
+              <Table.Head>
+                <Table.HeadCell>Coin</Table.HeadCell>
+                <Table.HeadCell>Price</Table.HeadCell>
+                <Table.HeadCell>24h Change</Table.HeadCell>
+                <Table.HeadCell>Market Cap</Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {filteredCrypts.map((crypt) => (
+                  <Table.Row key={crypt.id}>
+                    <Table.Cell className="whitespace-nowrap font-medium white">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={crypt.image}
+                          alt={crypt.name}
+                          className="w-[50px] rounded-full h-[50px] object-contain"
                         />
-                      </button>
-                      <span
-                        className={
-                          crypt.price_change_percentage_24h > 0
-                            ? "text-[#0ECB81] text-[14px] font-[500]"
-                            : "text-[#FF0000] text-[14px] font-[500]"
-                        }
-                      >
-                        {crypt.price_change_percentage_24h.toFixed(2)}%
-                      </span>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <p>₹ {crypt.market_cap.toLocaleString("en-IN")}</p>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-          <Stack
-            className="flex py-5 items-center text-gray-200 justify-center"
-            spacing={2}
-          >
-            <Pagination
-              onChange={handlePagination}
-              page={page}
-              count={10}
-              color="primary"
-            />
-          </Stack>
+                        <div className="flex flex-col gap-1">
+                          <p
+                            onClick={() => navigate(`/single/${crypt.id}`)}
+                            className="cursor-pointer uppercase text-[24px] font-[400]"
+                          >
+                            {crypt.symbol}
+                          </p>
+                          <p className="font-[400] text-[14px] text-[#A9A9A9]">
+                            {crypt.name}
+                          </p>
+                        </div>
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      ₹ {crypt.current_price.toLocaleString("en-IN")}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex gap-3">
+                        <button onClick={() => toggleWatchlist(crypt.id)}>
+                          <RemoveRedEyeRoundedIcon
+                            style={{
+                              color: watchlist.includes(crypt.id)
+                                ? "#0ECB81"
+                                : "inherit",
+                            }}
+                          />
+                        </button>
+                        <span
+                          className={
+                            crypt.price_change_percentage_24h > 0
+                              ? "text-[#0ECB81] text-[14px] font-[500]"
+                              : "text-[#FF0000] text-[14px] font-[500]"
+                          }
+                        >
+                          {crypt.price_change_percentage_24h.toFixed(2)}%
+                        </span>
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>₹ {crypt.market_cap.toLocaleString("en-IN")}</p>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
+          {loading ? (
+            <PaginationSkeleton />
+          ) : (
+            <Stack
+              className="flex py-5 items-center text-gray-200 justify-center"
+              spacing={2}
+            >
+              <Pagination
+                onChange={handlePagination}
+                page={page}
+                count={10}
+                color="primary"
+              />
+            </Stack>
+          )}
         </div>
       </div>
     </section>

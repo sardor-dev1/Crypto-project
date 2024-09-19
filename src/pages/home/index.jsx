@@ -2,11 +2,11 @@ import React from "react";
 import Hero from "../../components/hero";
 import Main from "../../components/main";
 
-export default function index() {
+export default function index({ value }) {
   return (
-    <main className="bg-[#14161A]">
+    <main>
       <Hero />
-      <Main />
+      <Main value={value} />
     </main>
   );
 }
