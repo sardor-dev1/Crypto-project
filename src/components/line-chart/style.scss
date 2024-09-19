@@ -1,0 +1,27 @@
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 30px;
+}
+
+.period-button {
+  background-color: transparent;
+  border: 1px solid #87ceeb;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0 5px;
+  padding: 10px 0;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.period-button.active {
+  background-color: #87ceeb;
+  color: black;
+  border-color: #87ceeb;
+}

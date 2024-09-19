@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import LineChart from "../../components/line-chart";
+import LineChart from "../../components/line-chart/index";
 import { useParams } from "react-router-dom";
 
 export default function CoinDetails() {

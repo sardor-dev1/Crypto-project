@@ -172,7 +172,9 @@ export default function Index({ value }) {
                       </div>
                     </Table.Cell>
                     <Table.Cell>
-                      <p>₹ {crypt.market_cap.toLocaleString("en-IN")}</p>
+                      <p className="cursor-pointer" onClick={() => navigate(`/single/${crypt.id}`)}>
+                        ₹ {crypt.market_cap.toLocaleString("en-IN")}
+                      </p>
                     </Table.Cell>
                   </Table.Row>
                 ))}

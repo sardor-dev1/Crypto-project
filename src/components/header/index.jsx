@@ -25,7 +25,7 @@ const index = ({ setValue }) => {
   };
 
   if (loading) {
-    return <HeaderSkeleton />; // Render the skeleton loader when loading
+    return <HeaderSkeleton />;
   }
 
   return (
@@ -34,7 +34,7 @@ const index = ({ setValue }) => {
       <header className="bg-[#15171B] fixed w-full shadow-lg z-20">
         <nav className="container">
           <Navbar fluid theme={customTheme} rounded>
-            <Navbar.Brand href="https://flowbite-react.com">
+            <Navbar.Brand href="/">
               <span className="self-center text-[#87CEEB] whitespace-nowrap text-xl font-semibold dark:text-white">
                 CRYPTOFOLIO
               </span>

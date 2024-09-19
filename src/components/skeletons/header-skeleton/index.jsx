@@ -13,7 +13,6 @@ const HeaderSkeleton = () => {
 
             <div className="skeleton-button w-[120px] h-[40px] bg-gray-500 animate-pulse"></div>
 
-            <div className="skeleton-toggle w-[40px] h-[40px] bg-gray-500 animate-pulse"></div>
           </div>
         </nav>
       </div>
