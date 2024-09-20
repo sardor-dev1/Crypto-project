@@ -33,13 +33,13 @@ export const tableTheme = {
   root: {
     base: "w-full text-left text-sm text-gray-500 dark:text-gray-400",
     shadow:
-      "absolute left-0 top-0 -z-10 h-full w-full rounded-lg bg-[#14161A] drop-shadow-md dark:bg-black",
+      "absolute left-0 top-0 -z-10 h-full w-full rounded-lg bg-[#14161A] dark:bg-black",
     wrapper: "relative",
   },
   body: {
     base: "group/body",
     cell: {
-      base: "px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg border-b border-[#16171A]", // Border added here
+      base: "px-6 py-4 group-first/body:group-first/row:first:rounded-tl-lg group-first/body:group-first/row:last:rounded-tr-lg group-last/body:group-last/row:first:rounded-bl-lg group-last/body:group-last/row:last:rounded-br-lg border-b border-[#16171A]", 
     },
   },
   head: {
@@ -52,7 +52,7 @@ export const tableTheme = {
     base: "group/row bg-[#14161A] border-collapse", 
     hovered: "hover:bg-gray-800 text-white dark:hover:bg-black",
     striped:
-      "odd:bg-[#14161A] even:bg-[#14161A] odd:dark:bg-[#14161A] even:dark:bg-white border-solid  border-[2px]", // Border added here
+      "odd:bg-[#14161A] even:bg-[#14161A] odd:dark:bg-[#14161A] even:dark:bg-white border-solid  border-[2px]", 
   },
 };
 

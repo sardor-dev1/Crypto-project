@@ -5,7 +5,7 @@ import Main from "../../components/main";
 export default function index({ value }) {
   return (
     <main>
-      <Hero />
+      <Hero value={value}/>
       <Main value={value} />
     </main>
   );

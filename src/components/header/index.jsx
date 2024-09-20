@@ -43,23 +43,23 @@ const index = ({ setValue, value }) => {
               <Dropdown
                 label={value}
                 inline
-                className="bg-[#15171B] uppercase border-none shadow-sm shadow-gray-500 text-white"
+                className="bg-[#15171B] border-none shadow-sm shadow-gray-500 text-white"
               >
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("usd")}
+                  onClick={() => handleSelect("USD")}
                 >
                   USD
                 </Dropdown.Item>
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("eur")}
+                  onClick={() => handleSelect("EUR")}
                 >
                   EUR
                 </Dropdown.Item>
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("rub")}
+                  onClick={() => handleSelect("RUB")}
                 >
                   RUB
                 </Dropdown.Item>

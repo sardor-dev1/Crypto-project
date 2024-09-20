@@ -121,18 +121,14 @@ export default function Index({ value }) {
           {loading ? (
             <SkeletonLoader />
           ) : (
-            <Table
-              className="divide-y border-collapse border-[#515151]"
-              hoverable
-              theme={tableTheme}
-            >
+            <Table className="divide-y shadow" hoverable theme={tableTheme}>
               <Table.Head>
                 <Table.HeadCell>Coin</Table.HeadCell>
                 <Table.HeadCell className="text-end">Price</Table.HeadCell>
                 <Table.HeadCell className="text-end">24h Change</Table.HeadCell>
                 <Table.HeadCell className="text-end">Market Cap</Table.HeadCell>
               </Table.Head>
-              <Table.Body className="divide-y border-collapse border-[#515151]">
+              <Table.Body className="divide-y border-none">
                 {filteredCrypts.map((crypt) => (
                   <Table.Row
                     className="border-b border-[#515151]"
@@ -159,7 +155,8 @@ export default function Index({ value }) {
                       </div>
                     </Table.Cell>
                     <Table.Cell className="text-end">
-                      ₽ {crypt.current_price.toLocaleString("en-IN")}
+                      {value === "USD" ? "$" : value === "RUB" ? "₽" : "€"}{" "}
+                      {crypt.current_price.toLocaleString("en-IN")}
                     </Table.Cell>
                     <Table.Cell className="text-end">
                       <div className="flex items-center justify-end gap-3">
@@ -188,7 +185,8 @@ export default function Index({ value }) {
                         className="cursor-pointer"
                         onClick={() => navigate(`/single/${crypt.id}`)}
                       >
-                        ₽ {crypt.market_cap.toLocaleString("en-IN")}
+                        {value === "USD" ? "$" : value === "RUB" ? "₽" : "€"}{" "}
+                        {crypt.market_cap.toLocaleString("en-IN")}
                       </p>
                     </Table.Cell>
                   </Table.Row>

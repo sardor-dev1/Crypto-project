@@ -3,10 +3,10 @@ import { Carousel } from "flowbite-react";
 import { carouselTheme } from "../../themes/index";
 import { Context } from "../../context/Context";
 import { ACTION_TYPES } from "../../store/reducers";
-import CarouselSkeleton from "../skeletons/carousel-skeleton"; // Make sure to use the correct path
+import CarouselSkeleton from "../skeletons/carousel-skeleton"; 
 import "./style.scss";
 
-export default function Index() {
+export default function Index({value}) {
   const { state, dispatch } = useContext(Context);
   const { crypts, watchlist } = state;
   const [loading, setLoading] = useState(true);
@@ -85,7 +85,8 @@ export default function Index() {
                           </p>
                         </div>
                         <p className="text-[22px] font-[500] text-white">
-                          ₹ {crypt.current_price}
+                          {value === "USD" ? "$" : value === "RUB" ? "₽" : "€"}{" "}
+                          {crypt.current_price}
                         </p>
                       </div>
                     ))}

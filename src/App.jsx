@@ -7,7 +7,7 @@ import { Context } from "./context/Context";
 import reducer, { initialState } from "./store/reducers";
 
 const App = () => {
-  const [value, setValue] = useState("rub");
+  const [value, setValue] = useState("RUB");
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
