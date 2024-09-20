@@ -9,10 +9,10 @@ import { ACTION_TYPES } from "../../store/reducers";
 import { useNavigate } from "react-router-dom";
 import SkeletonLoader from "../skeletons/skeleton";
 import MarkapSkeleton from "../skeletons/markap-skeleton";
-import PaginationSkeleton from "../skeletons/pagination"; 
+import PaginationSkeleton from "../skeletons/pagination";
 import "./style.scss";
 
-export default function Index({ value }) {  
+export default function Index({ value }) {
   console.log(value);
 
   const [loading, setLoading] = useState(false);
@@ -88,11 +88,14 @@ export default function Index({ value }) {
       crypt.symbol.toLowerCase().includes(searchTerm)
   );
 
-  if (error) return (
-    <div>
-      <p className="text-center text-[24px] text-red-600 pt-2">Error: {error}</p>
-    </div>
-  );
+  if (error)
+    return (
+      <div>
+        <p className="text-center text-[24px] text-red-600 pt-2">
+          Error: {error}
+        </p>
+      </div>
+    );
 
   return (
     <section className="container">

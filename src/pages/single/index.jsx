@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LineChart from "../../components/line-chart/index";
 import { useParams } from "react-router-dom";
+import Skeleton from "../../components/skeletons/single-page";
 
 export default function CoinDetails() {
   const { id } = useParams();
@@ -31,7 +32,7 @@ export default function CoinDetails() {
   }, [id]);
 
   if (loading) {
-    return <p className="text-white text-center">Loading...</p>;
+    return <Skeleton />;
   }
 
   if (error) {
