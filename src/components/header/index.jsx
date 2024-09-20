@@ -10,7 +10,7 @@ const customTheme = {
   },
 };
 
-const index = ({ setValue }) => {
+const index = ({ setValue, value }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -41,25 +41,25 @@ const index = ({ setValue }) => {
             </Navbar.Brand>
             <div className="flex gap-12 md:order-2">
               <Dropdown
-                label="USD"
+                label={value}
                 inline
-                className="bg-[#15171B] border-none shadow-sm shadow-gray-500 text-white"
+                className="bg-[#15171B] uppercase border-none shadow-sm shadow-gray-500 text-white"
               >
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("USD")}
+                  onClick={() => handleSelect("usd")}
                 >
                   USD
                 </Dropdown.Item>
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("EUR")}
+                  onClick={() => handleSelect("eur")}
                 >
                   EUR
                 </Dropdown.Item>
                 <Dropdown.Item
                   className="bg-[#15171B] text-white focus:bg-gray-900 hover:bg-bl"
-                  onClick={() => handleSelect("RUB")}
+                  onClick={() => handleSelect("rub")}
                 >
                   RUB
                 </Dropdown.Item>

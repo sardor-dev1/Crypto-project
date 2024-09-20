@@ -7,13 +7,13 @@ import { Context } from "./context/Context";
 import reducer, { initialState } from "./store/reducers";
 
 const App = () => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("rub");
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <Context.Provider value={{ state, dispatch }}>
       <Router>
-        <Header setValue={setValue} />
+        <Header setValue={setValue} value={value} />
         <Routes>
           <Route path="/" element={<Home value={value} />} />
           <Route path="/single/:id" element={<SinglePage />} />

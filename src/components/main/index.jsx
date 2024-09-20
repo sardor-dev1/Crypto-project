@@ -9,10 +9,12 @@ import { ACTION_TYPES } from "../../store/reducers";
 import { useNavigate } from "react-router-dom";
 import SkeletonLoader from "../skeletons/skeleton";
 import MarkapSkeleton from "../skeletons/markap-skeleton";
-import PaginationSkeleton from "../skeletons/pagination";
+import PaginationSkeleton from "../skeletons/pagination"; 
 import "./style.scss";
 
-export default function Index({ value }) {
+export default function Index({ value }) {  
+  console.log(value);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
@@ -26,9 +28,8 @@ export default function Index({ value }) {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=gecko_desc&per_page=10&page=${page}&sparkline=false&price_change_percentage=24h`
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${value}&order=gecko_desc&per_page=10&page=${page}&sparkline=false&price_change_percentage=24h`
       );
-
       if (!response.ok) {
         throw new Error("HTTP error!");
       }
@@ -42,7 +43,7 @@ export default function Index({ value }) {
       setError(error.message);
       setLoading(false);
     }
-  }, [page, dispatch]);
+  }, [page, dispatch, value]);
 
   useEffect(() => {
     fetchCrypts();
@@ -87,7 +88,11 @@ export default function Index({ value }) {
       crypt.symbol.toLowerCase().includes(searchTerm)
   );
 
-  if (error) return <div>Error: {error}</div>;
+  if (error) return (
+    <div>
+      <p className="text-center text-[24px] text-red-600 pt-2">Error: {error}</p>
+    </div>
+  );
 
   return (
     <section className="container">
@@ -116,16 +121,23 @@ export default function Index({ value }) {
           {loading ? (
             <SkeletonLoader />
           ) : (
-            <Table hoverable theme={tableTheme}>
+            <Table
+              className="divide-y border-collapse border-[#515151]"
+              hoverable
+              theme={tableTheme}
+            >
               <Table.Head>
                 <Table.HeadCell>Coin</Table.HeadCell>
-                <Table.HeadCell>Price</Table.HeadCell>
-                <Table.HeadCell>24h Change</Table.HeadCell>
-                <Table.HeadCell>Market Cap</Table.HeadCell>
+                <Table.HeadCell className="text-end">Price</Table.HeadCell>
+                <Table.HeadCell className="text-end">24h Change</Table.HeadCell>
+                <Table.HeadCell className="text-end">Market Cap</Table.HeadCell>
               </Table.Head>
-              <Table.Body className="divide-y">
+              <Table.Body className="divide-y border-collapse border-[#515151]">
                 {filteredCrypts.map((crypt) => (
-                  <Table.Row key={crypt.id}>
+                  <Table.Row
+                    className="border-b border-[#515151]"
+                    key={crypt.id}
+                  >
                     <Table.Cell className="whitespace-nowrap font-medium white">
                       <div className="flex items-center gap-3">
                         <img
@@ -146,11 +158,11 @@ export default function Index({ value }) {
                         </div>
                       </div>
                     </Table.Cell>
-                    <Table.Cell>
-                      ₹ {crypt.current_price.toLocaleString("en-IN")}
+                    <Table.Cell className="text-end">
+                      ₽ {crypt.current_price.toLocaleString("en-IN")}
                     </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex gap-3">
+                    <Table.Cell className="text-end">
+                      <div className="flex items-center justify-end gap-3">
                         <button onClick={() => toggleWatchlist(crypt.id)}>
                           <RemoveRedEyeRoundedIcon
                             style={{
@@ -171,9 +183,12 @@ export default function Index({ value }) {
                         </span>
                       </div>
                     </Table.Cell>
-                    <Table.Cell>
-                      <p className="cursor-pointer" onClick={() => navigate(`/single/${crypt.id}`)}>
-                        ₹ {crypt.market_cap.toLocaleString("en-IN")}
+                    <Table.Cell className="text-end">
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/single/${crypt.id}`)}
+                      >
+                        ₽ {crypt.market_cap.toLocaleString("en-IN")}
                       </p>
                     </Table.Cell>
                   </Table.Row>

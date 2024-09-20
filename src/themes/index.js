@@ -49,10 +49,10 @@ export const tableTheme = {
     },
   },
   row: {
-    base: "group/row bg-[#14161A] border-b-[2px] border-[#515151]", // Border added here
+    base: "group/row bg-[#14161A] border-collapse", 
     hovered: "hover:bg-gray-800 text-white dark:hover:bg-black",
     striped:
-      "odd:bg-[#14161A] even:bg-[#14161A] odd:dark:bg-[#14161A] even:dark:bg-white border-b border-[#515151]", // Border added here
+      "odd:bg-[#14161A] even:bg-[#14161A] odd:dark:bg-[#14161A] even:dark:bg-white border-solid  border-[2px]", // Border added here
   },
 };
 
